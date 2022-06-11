@@ -98,7 +98,6 @@ jobs:
 
       - name: Create Release
         id: create_release
-        run: echo poetry version -s >> $VERSION
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
