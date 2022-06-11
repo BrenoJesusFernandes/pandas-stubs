@@ -95,13 +95,13 @@ jobs:
       - name: Set version and dist files
         id: vars
         run: |
-        echo ::set-output name=version::"$(poetry version -s)"
-        wheel_path=(dist/*.whl)
-        echo ::set-output name=wheel_path::$wheel_path
-        echo ::set-output name=wheel_file::$(basename "$wheel_path")
-        sdist_path=(dist/*.tar.gz)
-        echo ::set-output name=sdist_path::$sdist_path
-        echo ::set-output name=sdist_file::$(basename "$sdist_path")
+          echo ::set-output name=version::"$(poetry version -s)"
+          wheel_path=(dist/*.whl)
+          echo ::set-output name=wheel_path::$wheel_path
+          echo ::set-output name=wheel_file::$(basename "$wheel_path")
+          sdist_path=(dist/*.tar.gz)
+          echo ::set-output name=sdist_path::$sdist_path
+          echo ::set-output name=sdist_file::$(basename "$sdist_path")
 
 
       - name: Create Release
