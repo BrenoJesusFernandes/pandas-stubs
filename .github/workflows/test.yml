@@ -11,60 +11,60 @@ on:
   workflow_dispatch:
 
 jobs:
-#  test:
-#    runs-on: ${{ matrix.os }}
-#    timeout-minutes: 10
-#    strategy:
-#      matrix:
-#        os: [ubuntu-latest, windows-latest, macos-latest]
-#        python-version: ['3.8', '3.9', '3.10']
-#
-#    steps:
-#
-#    - uses: actions/checkout@v2
-#
-#    - name: Set up Python ${{ matrix.python-version }}
-#      uses: actions/setup-python@v2
-#      with:
-#        python-version: ${{ matrix.python-version }}
-#
-#    - name: Upgrade pip
-#      run: python -m pip install --upgrade pip
-#
-#    - name: Install Poetry
-#      run: pip install poetry
-#
-#    - name: Install project dependencies
-#      run: poetry install -vvv
-#
-#    - name: Run MyPy Against Source Code
-#      run: poetry run poe run_mypy_src
-#
-#    - name: Run Pyright Against Source Code
-#      run: poetry run poe run_pyright_src
-#
-#    - name: Run Pytest Against Source Code
-#      run: poetry run poe run_pytest_src
-#
-#    - name: Build Distribution
-#      run: poetry run poe build_dist
-#
-#    - name: Install Distribution
-#      run: poetry run poe install_dist
-#
-#    - name: Remove Source Code
-#      run: poetry run poe remove_src
-#
-#    - name: Run Pyright Against Distribution
-#      run: poetry run poe run_pyright_dist
-#
-#    - name: Run MyPy Against Distribution
-#      run: poetry run poe run_mypy_dist
+  test:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.8', '3.9', '3.10']
 
-  publish:
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Upgrade pip
+      run: python -m pip install --upgrade pip
+
+    - name: Install Poetry
+      run: pip install poetry
+
+    - name: Install project dependencies
+      run: poetry install -vvv
+
+    - name: Run MyPy Against Source Code
+      run: poetry run poe run_mypy_src
+
+    - name: Run Pyright Against Source Code
+      run: poetry run poe run_pyright_src
+
+    - name: Run Pytest Against Source Code
+      run: poetry run poe run_pytest_src
+
+    - name: Build Distribution
+      run: poetry run poe build_dist
+
+    - name: Install Distribution
+      run: poetry run poe install_dist
+
+    - name: Remove Source Code
+      run: poetry run poe remove_src
+
+    - name: Run Pyright Against Distribution
+      run: poetry run poe run_pyright_dist
+
+    - name: Run MyPy Against Distribution
+      run: poetry run poe run_mypy_dist
+
+  publish-pypi:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    # needs: test
+    needs: test
 
     steps:
       - uses: actions/checkout@v2
@@ -86,8 +86,34 @@ jobs:
       - name: Update distribution version
         run: poetry run poetry-dynamic-versioning
 
-#      - name: Publish PyPi
-#        run: poetry publish --build --username ${{ secrets.PYPI_TOKEN_NAME }} --password ${{ secrets.PYPI_TOKEN }}
+      - name: Publish PyPi
+        run: poetry publish --build --username ${{ secrets.PYPI_TOKEN_NAME }} --password ${{ secrets.PYPI_TOKEN }}
+
+
+  publish-github:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Install project dependencies
+        run: poetry install -vvv
+
+      - name: Update distribution version
+        run: poetry run poetry-dynamic-versioning
 
       - name: Build Distribution
         run: poetry build
@@ -102,7 +128,6 @@ jobs:
           sdist_path=(dist/*.tar.gz)
           echo ::set-output name=sdist_path::$sdist_path
           echo ::set-output name=sdist_file::$(basename "$sdist_path")
-
 
       - name: Create Release
         id: create_release
@@ -126,7 +151,7 @@ jobs:
           asset_name: ${{ steps.vars.outputs.wheel_file }}
           asset_content_type: application/whl
 
-      - name: Upload Release sdist
+      - name: Upload Release Sdist
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

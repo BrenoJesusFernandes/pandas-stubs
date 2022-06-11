@@ -1,0 +1,32 @@
+package:
+  name: pandas-test-stubs
+  version: 1.4.2.220611
+
+source:
+  path: ..
+
+build:
+  number: 0
+  script: poetry build
+
+requirements:
+  build:
+    - python
+    - pandas==1.4.2
+    - typing-extensions>=4.2.0
+    - matplotlib>=3.3.2
+
+  run:
+    - python
+    - pandas==1.4.2
+    - typing-extensions>=4.2.0
+    - matplotlib>=3.3.2
+
+test:
+  imports:
+    - albumentations
+
+about:
+  home: {{ data['url'] }}
+  license: {{ data['license'] }}
+  summary: {{ data['description'] }}
