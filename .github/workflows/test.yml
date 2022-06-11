@@ -97,7 +97,7 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: poetry version -s
+          VERSION: ${{ poetry version -s }}
         with:
           tag_name: ${{ env.VERSION }}
           release_name: Release ${{ env.VERSION }}
@@ -109,7 +109,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: poetry version -s
+          VERSION: ${{ poetry version -s }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/pandas_test_stubs-${{ env.VERSION }}-py3-none-any.whl
