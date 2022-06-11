@@ -86,27 +86,27 @@ jobs:
       - name: Update distribution version
         run: poetry run poetry-dynamic-versioning
 
-      - name: Publish PyPi
-        run: poetry publish --build --username ${{ secrets.PYPI_TOKEN_NAME }} --password ${{ secrets.PYPI_TOKEN }}
+#      - name: Publish PyPi
+#        run: poetry publish --build --username ${{ secrets.PYPI_TOKEN_NAME }} --password ${{ secrets.PYPI_TOKEN }}
 
-#      - name: Create Release
-#        id: create_release
-#        uses: actions/create-release@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          tag_name: 1.4.2.220611
-#          release_name: Release 1.4.2.220611
-#          draft: false
-#          prerelease: true
-#
-#      - name: Upload Release Asset
-#        id: upload-release-asset
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: ./dist/pandas_test_stubs-1.4.2.220611-py3-none-any.whl
-#          asset_name: pandas_test_stubs-1.4.2.220611.whl
-#          asset_content_type: application/whl
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: 1.4.2.220611
+          release_name: Release 1.4.2.220611
+          draft: false
+          prerelease: true
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/pandas_test_stubs-1.4.2.220611-py3-none-any.whl
+          asset_name: pandas_test_stubs-1.4.2.220611.whl
+          asset_content_type: application/whl
