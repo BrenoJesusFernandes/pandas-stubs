@@ -92,9 +92,17 @@ jobs:
       - name: Build Distribution
         run: poetry build
 
-      - name: Set output version
-        id: version
-        run: echo ::set-output name=version::"$(poetry version -s)"
+      - name: Set version and dist files
+        id: vars
+        run: |
+        echo ::set-output name=version::"$(poetry version -s)"
+        wheel_path=(dist/*.whl)
+        echo ::set-output name=wheel_path::$wheel_path
+        echo ::set-output name=wheel_file::$(basename "$wheel_path")
+        sdist_path=(dist/*.tar.gz)
+        echo ::set-output name=sdist_path::$sdist_path
+        echo ::set-output name=sdist_file::$(basename "$sdist_path")
+
 
       - name: Create Release
         id: create_release
@@ -102,12 +110,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.version.outputs.version }}
-          release_name: Release ${{ steps.version.outputs.version }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
+          tag_name: ${{ steps.vars.outputs.version }}
+          release_name: Release ${{ steps.vars.outputs.version }}
+          body_path: "docs/6 - release.md"
           draft: false
           prerelease: true
 
@@ -117,8 +122,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/pandas_test_stubs-${{ steps.version.outputs.version }}-py3-none-any.whl
-          asset_name: pandas_test_stubs-${{ steps.version.outputs.version }}-py3-none-any.whl
+          asset_path: ${{ steps.vars.outputs.wheel_path }}
+          asset_name: ${{ steps.vars.outputs.wheel_path }}
           asset_content_type: application/whl
 
       - name: Upload Release sdist
@@ -127,6 +132,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/pandas-test-stubs-${{ steps.version.outputs.version }}.tar.gz
-          asset_name: pandas-test-stubs-${{ steps.version.outputs.version }}.tar.gz
+          asset_path: ${{ steps.vars.outputs.sdist_path }}
+          asset_name: ${{ steps.vars.outputs.sdist_file }}
           asset_content_type: application/gzip
