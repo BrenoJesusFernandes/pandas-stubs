@@ -92,15 +92,19 @@ jobs:
       - name: Build Distribution
         run: poetry build --format wheel
 
+      - name: Set output version
+        id: version
+        run: echo ::set-output name=version::"$(poetry version -s)"
+
       - name: Create Release
         id: create_release
+        run: echo poetry version -s >> $VERSION
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ poetry version -s }}
         with:
-          tag_name: ${{ env.VERSION }}
-          release_name: Release ${{ env.VERSION }}
+          tag_name: ${{ steps.version.outputs.version }}
+          release_name: Release ${{ steps.version.outputs.version }}
           draft: false
           prerelease: true
 
@@ -109,9 +113,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ poetry version -s }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/pandas_test_stubs-${{ env.VERSION }}-py3-none-any.whl
-          asset_name: pandas_test_stubs-${{ env.VERSION }}.whl
+          asset_path: dist/pandas_test_stubs-${{ steps.version.outputs.version }}-py3-none-any.whl
+          asset_name: pandas_test_stubs-${{ steps.version.outputs.version }}.whl
           asset_content_type: application/whl
