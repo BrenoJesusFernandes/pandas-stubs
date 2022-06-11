@@ -90,7 +90,7 @@ jobs:
 #        run: poetry publish --build --username ${{ secrets.PYPI_TOKEN_NAME }} --password ${{ secrets.PYPI_TOKEN }}
 
       - name: Build Distribution
-        run: poetry build --format wheel
+        run: poetry build
 
       - name: Set output version
         id: version
