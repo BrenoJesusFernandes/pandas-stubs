@@ -30,7 +30,7 @@ jobs:
       run: pip install poetry
 
     - name: Install project dependencies
-      run: poetry install --no-root -vvv
+      run: poetry update -vvv
 
     - name: Check style with black
       run: poetry run poe check_black
@@ -63,7 +63,7 @@ jobs:
       run: pip install poetry
 
     - name: Install project dependencies
-      run: poetry install -vvv --no-root
+      run: poetry update -vvv
 
     - name: Run MyPy Against Source Code
       run: poetry run poe run_mypy_src
