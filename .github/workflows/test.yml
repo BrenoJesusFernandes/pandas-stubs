@@ -33,10 +33,10 @@ jobs:
       run: poetry update -vvv
 
     - name: Check style with black
-      run: poetry run poe check_black
+      run: poetry run poe run_black_check
 
     - name: Check style with isort
-      run: poetry run poe check_isort
+      run: poetry run poe run_isort_check
 
   test:
     runs-on: ${{ matrix.os }}
