@@ -2,7 +2,7 @@ name: 'Release'
 
 on:
   schedule:
-    - cron: "15 * * * *"
+    - cron: "0 17 * * 3"
 
 jobs:
   style-check:
