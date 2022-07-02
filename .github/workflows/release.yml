@@ -2,12 +2,28 @@ name: 'Release'
 
 on:
   schedule:
-    - cron: "0 9,21 * * *"
+    - cron: "50 23 * * *"
 
 jobs:
+  check-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check new updates in source code today
+        run: |
+          amount_commits_today=$(git rev-list HEAD --count --since today -- 'pandas-stubs/**/*.pyi')
+          new_update="false"
+          if [ $amount_commits_today -gt 0 ]; then; new_update="true" ; fi;
+          echo ::set-output name=wheel_path::$new_update
+
   style-check:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: check-release
+    if: needs.check-release.outputs.new_update == 'true'
 
     steps:
     - uses: actions/checkout@v2
