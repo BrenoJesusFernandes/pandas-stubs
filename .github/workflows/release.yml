@@ -1,4 +1,4 @@
-name: 'Release'
+name: 'Release Beta'
 
 on:
   schedule:
@@ -12,18 +12,26 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Check new updates in source code today
+      - name: Check if there is new updates in source code today
+        id: update_today
         run: |
-          amount_commits_today=$(git rev-list HEAD --count --since today -- 'pandas-stubs/**/*.pyi') 
+          amount_commits_today=$(git rev-list HEAD --count --since "00:00" -- 'pandas-stubs/*.pyi' -- pyproject.toml ) 
           new_update="false"
           if [ $amount_commits_today -gt 0 ]; then; new_update="true" ; fi;
-          echo ::set-output name=wheel_path::$new_update
+          echo ::set-output name=new_update::$new_update
+
+      - name: Check if the wheel generate is not equal the last
+        id: prod_comparison
+        run: |
+          prod_comp="false"
+          echo ::set-output name=prod_comp::$prod_comp
+          
 
   style-check:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: check-release
-    if: needs.check-release.outputs.new_update == 'true'
+    if: needs.check-release.outputs.new_update == 'true' && needs.check-release.outputs.prod_comp == 'false'
 
     steps:
     - uses: actions/checkout@v2
@@ -103,7 +111,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: stub-tests
-    if: github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v2
@@ -132,7 +139,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: stub-tests
-    if: github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v2
