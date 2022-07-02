@@ -57,8 +57,8 @@ jobs:
           echo ::set-output name=new_wheel::$new_wheel
       - name: Show vars
         run: |
-        echo ${{ check-release.outputs.new_update }}
-        echo ${{ check-release.outputs.new_wheel }}
+        echo ${{ steps.check_src_code.outputs.new_update }}
+        echo ${{ steps.check_wheel.outputs.new_wheel }}
           
 
   style-check:
