@@ -1,8 +1,6 @@
-name: 'Release Beta'
+name: 'Release Alfa'
 
-on:
-  schedule:
-    - cron: "50 23 * * *"
+on: [push]
 
 jobs:
   check-release:
