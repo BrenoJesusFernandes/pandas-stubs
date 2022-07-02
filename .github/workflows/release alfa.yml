@@ -6,6 +6,9 @@ jobs:
   check-release:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      new_update: ${{ steps.check_src_code.outputs.new_update }}
+      new_wheel: ${{ steps.check_wheel.outputs.new_wheel }}
 
     steps:
       - uses: actions/checkout@v2
@@ -70,7 +73,7 @@ jobs:
         python-version: "3.10"
 
     - name: Show vars
-      run: echo ${{ needs.steps.check_src_code.outputs.new_update }} ${{ needs.check-release.steps.check_wheel.outputs.new_wheel }}
+      run: echo ${{ needs.check-release.outputs.new_update }} ${{ needs.check-release.outputs.new_wheel }}
 
     - name: Upgrade pip
       run: python -m pip install --upgrade pip
