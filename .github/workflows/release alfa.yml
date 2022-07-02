@@ -59,7 +59,7 @@ jobs:
         with:
           update: ${{ steps.check_src_code.outputs.new_update }}
           wheel: ${{ steps.check_wheel.outputs.new_wheel }}
-        run: echo ${{ update }}
+        run: echo $update $wheel
           
 
   style-check:
