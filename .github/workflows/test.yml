@@ -11,6 +11,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Show current date and time
+      run: date
+
     - name: Set up Python 3.10
       uses: actions/setup-python@v2
       with:

@@ -12,6 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Show current date and time
+        run: date
+
       - name: Check if there is new updates in source code today
         id: update_today
         run: |
