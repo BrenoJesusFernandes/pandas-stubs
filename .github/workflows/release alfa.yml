@@ -21,8 +21,8 @@ jobs:
       - name: Check if there is new updates in source code today
         id: check_src_code
         run: |
-          amount_commits_today=$(git rev-list HEAD --count --since "00:00" -- 'pandas-stubs/*.pyi' -- pyproject.toml ) 
-          new_update="false"
+          amount_commits_today=$(git rev-list HEAD --count --since "00:00" -- "pandas-stubs/*.pyi" -- pyproject.toml ); 
+          new_update="false";
           if [ $amount_commits_today -gt 0 ]; then; new_update="true" ; fi;
           echo ::set-output name=new_update::$new_update
 
