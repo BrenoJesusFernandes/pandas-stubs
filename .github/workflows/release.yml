@@ -8,6 +8,9 @@ jobs:
   check-release:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      new_update: ${{ steps.check_src_code.outputs.new_update }}
+      new_wheel: ${{ steps.check_wheel.outputs.new_wheel }}
 
     steps:
       - uses: actions/checkout@v2
@@ -23,9 +26,12 @@ jobs:
       - name: Check if there is new updates in source code today
         id: check_src_code
         run: |
-          amount_commits_today=$(git rev-list HEAD --count --since "00:00" -- 'pandas-stubs/*.pyi' -- pyproject.toml ) 
+          amount_commits_today=$(git rev-list HEAD --count --since "00:00" -- "pandas-stubs/*.pyi" -- pyproject.toml ) 
           new_update="false"
-          if [ $amount_commits_today -gt 0 ]; then; new_update="true" ; fi;
+          if [ $amount_commits_today -gt 0 ]
+          then
+          new_update="true"
+          fi
           echo ::set-output name=new_update::$new_update
 
       - name: Upgrade pip
@@ -46,19 +52,20 @@ jobs:
       - name: Check if the wheel generate is not equal the last in pypi
         id: check_wheel
         run: |
-          diff --brief dist/pandas_stubs*.whl .download/pandas_stubs*.whl >/dev/null
-          diff_output=$?
+          local_wheel_hash=($(shasum -a 256 dist/pandas_stubs*.whl | cut -f1 -d' '))
+          pypi_wheel_hash=($(shasum -a 256 .download/pandas_stubs*.whl | cut -f1 -d' '))
           new_wheel="false"
-          if [ $diff_output -eq 0 ]; then; new_wheel="true"; fi; 
+          if [ $pypi_wheel_hash != $local_wheel_hash ]
+          then
+          new_wheel="true"
+          fi 
           echo ::set-output name=new_wheel::$new_wheel
-          
 
   style-check:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: check-release
-    if: needs.check-release.outputs.new_update == 'true' && needs.check-release.outputs.new_wheel == 'false'
-
+    if: needs.check-release.outputs.new_update == 'true' && needs.check-release.outputs.new_wheel == 'true'
     steps:
     - uses: actions/checkout@v2
 
