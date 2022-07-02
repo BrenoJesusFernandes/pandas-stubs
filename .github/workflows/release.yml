@@ -14,7 +14,7 @@ jobs:
 
       - name: Check new updates in source code today
         run: |
-          amount_commits_today=$(git rev-list HEAD --count --since today -- 'pandas-stubs/**/*.pyi')
+          amount_commits_today=$(git rev-list HEAD --count --since today -- 'pandas-stubs/**/*.pyi') 
           new_update="false"
           if [ $amount_commits_today -gt 0 ]; then; new_update="true" ; fi;
           echo ::set-output name=wheel_path::$new_update
