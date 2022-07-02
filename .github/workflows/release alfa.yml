@@ -55,6 +55,10 @@ jobs:
           new_wheel="true"
           fi 
           echo ::set-output name=new_wheel::$new_wheel
+      - name: Show vars
+        run: |
+        echo ${{ check-release.outputs.new_update }}
+        echo ${{ check-release.outputs.new_wheel }}
           
 
   style-check:
