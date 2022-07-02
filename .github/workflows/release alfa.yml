@@ -56,9 +56,10 @@ jobs:
           fi 
           echo ::set-output name=new_wheel::$new_wheel
       - name: Show vars
-        run: |
-        echo ${{ steps.check_src_code.outputs.new_update }}
-        echo ${{ steps.check_wheel.outputs.new_wheel }}
+        with:
+          update: ${{ steps.check_src_code.outputs.new_update }}
+          wheel: ${{ steps.check_wheel.outputs.new_wheel }}
+        run: echo ${{ update }}
           
 
   style-check:
