@@ -50,7 +50,7 @@ jobs:
           local_wheel_hash=($(shasum -a 256 dist/pandas_stubs*.whl | cut -f1 -d' '))
           pypi_wheel_hash=($(shasum -a 256 .download/pandas_stubs*.whl | cut -f1 -d' '))
           new_wheel="false"
-          if [ $pypi_wheel_hash = $local_wheel_hash ]
+          if [ $pypi_wheel_hash != $local_wheel_hash ]
           then
           new_wheel="true"
           fi 
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: check-release
-    if: needs.check-release.outputs.new_update == 'true' && needs.check-release.outputs.new_wheel == 'false'
+    if: needs.check-release.outputs.new_update == 'true' && needs.check-release.outputs.new_wheel == 'true'
 
     steps:
     - uses: actions/checkout@v2
