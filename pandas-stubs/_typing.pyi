@@ -25,6 +25,7 @@ from typing import (
 )
 
 import numpy as np
+
 from numpy import typing as npt
 from pandas._libs.tslibs import Period, Timedelta as Timedelta, Timestamp as Timestamp
 from pandas.core.arrays import ExtensionArray as ExtensionArray
