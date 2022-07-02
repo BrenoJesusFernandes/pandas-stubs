@@ -21,9 +21,12 @@ jobs:
       - name: Check if there is new updates in source code today
         id: check_src_code
         run: |
-          amount_commits_today=$(git rev-list HEAD --count --since "00:00" -- "pandas-stubs/*.pyi" -- pyproject.toml ); 
-          new_update="false";
-          if [ $amount_commits_today -gt 0 ]; then; new_update="true" ; fi;
+          amount_commits_today=$(git rev-list HEAD --count --since "00:00" -- "pandas-stubs/*.pyi" -- pyproject.toml ) 
+          new_update="false"
+          if [ $amount_commits_today -gt 0 ]
+          then
+          new_update="true"
+          fi
           echo ::set-output name=new_update::$new_update
 
       - name: Upgrade pip
@@ -47,7 +50,10 @@ jobs:
           diff --brief dist/pandas_stubs*.whl .download/pandas_stubs*.whl >/dev/null
           diff_output=$?
           new_wheel="false"
-          if [ $diff_output -eq 0 ]; then; new_wheel="true"; fi; 
+          if [ $diff_output -eq 0 ]
+          then
+          new_wheel="true"
+          fi 
           echo ::set-output name=new_wheel::$new_wheel
           
 
