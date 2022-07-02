@@ -58,12 +58,12 @@ jobs:
           new_wheel="true"
           fi 
           echo ::set-output name=new_wheel::$new_wheel
-          
 
   style-check:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: check-release
+    if: needs.check-release.outputs.new_update == 'true' && needs.check-release.outputs.new_wheel == 'true'
     steps:
     - uses: actions/checkout@v2
 
@@ -71,9 +71,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: "3.10"
-
-    - name: Show vars
-      run: echo ${{ needs.check-release.outputs.new_update }} ${{ needs.check-release.outputs.new_wheel }}
 
     - name: Upgrade pip
       run: python -m pip install --upgrade pip
