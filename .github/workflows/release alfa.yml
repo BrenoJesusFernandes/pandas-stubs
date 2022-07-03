@@ -47,7 +47,7 @@ jobs:
       - name: Check if the wheel generate is not equal the last in pypi
         id: check_wheel
         run: |
-          diff --brief dist/pandas_stubs*.whl .download/pandas_stubs*.whl >/dev/null
+          diff --brief dist/pandas_stubs*.whl .download/pandas_stubs*.whl
           diff_output=$?
           new_wheel="false"
           if [ $diff_output -eq 0 ]
