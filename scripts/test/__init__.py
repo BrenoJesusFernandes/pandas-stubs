@@ -76,9 +76,9 @@ def test_all(clean_cache: bool = False):
 
     steps.extend(
         [
-            _step.create_mypy_pkg_file,
+            #_step.create_mypy_pkg_file,
             _step.mypy_src,
-            _step.destroy_mypy_pkg_file,
+            #_step.destroy_mypy_pkg_file,
             _step.pyright_src,
             _step.pytest_src,
             _step.build_dist,
