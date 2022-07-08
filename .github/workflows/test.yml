@@ -37,7 +37,7 @@ jobs:
         key: ${{ matrix.os }}-${{ matrix.python-version }}-poetry-${{ steps.poetry_version.outputs.VERSION }}-${{ hashFiles('pyproject.toml') }}
 
     - name: Install project dependencies
-      run: poetry install -vvv --no-root
+      run: poetry update -vvv
 
     - name: Run MyPy Against Source Code
       run: poetry run poe mypy_src
